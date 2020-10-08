@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.graphaware.pizzeria.MenuTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 8.627 s <<< FAILURE! - in com.graphaware.pizzeria.MenuTest
+getItems  Time elapsed: 0.174 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Not yet implemented
+	at com.graphaware.pizzeria.MenuTest.getItems(MenuTest.java:18)
+
+addItemToMenu  Time elapsed: 0.001 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: No implementation yet
+	at com.graphaware.pizzeria.MenuTest.addItemToMenu(MenuTest.java:13)
+
