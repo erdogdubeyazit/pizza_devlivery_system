@@ -7,8 +7,11 @@ import com.graphaware.pizzeria.model.PurchaseState;
 import com.graphaware.pizzeria.repository.PizzeriaUserRepository;
 import com.graphaware.pizzeria.repository.PurchaseRepository;
 import com.graphaware.pizzeria.security.PizzeriaUserPrincipal;
+import com.graphaware.pizzeria.service.util.CampaignHandler;
+import com.graphaware.pizzeria.service.util.SimpleCampaignHandler;
 
 import javax.transaction.Transactional;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -88,7 +91,7 @@ public class PurchaseService {
     @PreAuthorize("hasRole('PIZZA_MAKER')")
     public void completePurchase(long id) {
         PizzeriaUser currentUser = getCurrentUser();
-
+        
         Purchase purchase = purchaseRepository.findById(id).orElseThrow(PizzeriaException::new);
 
         if (!purchase.getState().equals(PurchaseState.ONGOING)) {
@@ -110,29 +113,8 @@ public class PurchaseService {
     }
 
     private Double computeAmount(List<Pizza> pizzas) {
-        double totalPrice = 0;
-        if (pizzas == null) {
-            return 0.0;
-        }
-        // buy a pineapple pizza, get 10% off the others
-        boolean applyPineappleDiscount = false;
-        for (Pizza pizza : pizzas) {
-            if (pizza.getToppings().contains("pineapple")) {
-                applyPineappleDiscount = true;
-            }
-        }
-        for (Pizza pizza : pizzas) {
-            if (pizza.getToppings().contains("pineapple")) {
-                totalPrice += pizza.getPrice();
-            }  else {
-                if (applyPineappleDiscount) {
-                        totalPrice += pizza.getPrice() *0.9;
-                } else {
-                    totalPrice += pizza.getPrice();
-                }
-            }
-        }
-        return totalPrice;
+        CampaignHandler campaignHandler = new SimpleCampaignHandler();
+        return campaignHandler.handle(pizzas);
     }
 
     @PreAuthorize("hasRole('PIZZA_MAKER')")
